@@ -133,6 +133,14 @@ class EnhancedSummary(BaseModel):
 
 
 # PredictionResult sudah didefinisikan di atas, jadi ini aman
+class EvaluationMetrics(BaseModel):
+    """Evaluation metrics (only present if dataset has Label column)"""
+    accuracy: float = Field(..., description="Overall accuracy percentage")
+    per_class_accuracy: Dict[str, float] = Field(default_factory=dict, description="Accuracy per class")
+    classification_report: Optional[Dict] = Field(None, description="Detailed classification report")
+    confusion_matrix: Optional[List[List[int]]] = Field(None, description="Confusion matrix")
+
+
 class EnhancedDatasetResponse(BaseModel):
     """Enhanced response for dataset prediction"""
     success: bool = True
@@ -140,6 +148,7 @@ class EnhancedDatasetResponse(BaseModel):
     conclusion: Conclusion
     sample_results: Optional[List[PredictionResult]] = None
     results: Optional[List[PredictionResult]] = None
+    evaluation: Optional[EvaluationMetrics] = Field(None, description="Evaluation metrics (only present if dataset has Label column)")
 
 
 # ============== Dataset Prediction Summary (Simplified) ==============

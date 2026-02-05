@@ -156,40 +156,78 @@ class SimpleColumnMapper:
     }
     
     @classmethod
+    def _canonicalize_name(cls, name: str) -> str:
+        """
+        Canonicalize column name to snake_case format
+        - Lowercase
+        - Replace spaces, slashes, dashes with underscores
+        - Remove extra underscores
+        """
+        name = str(name).strip()
+        # Replace spaces, slashes, dashes with underscores
+        name = name.replace(' ', '_').replace('/', '_').replace('-', '_')
+        # Lowercase
+        name = name.lower()
+        # Remove multiple consecutive underscores
+        while '__' in name:
+            name = name.replace('__', '_')
+        # Remove leading/trailing underscores
+        name = name.strip('_')
+        return name
+    
+    @classmethod
     def map_columns(cls, df: pd.DataFrame, required_columns: List[str]) -> Tuple[pd.DataFrame, Dict[str, str]]:
         """
-        Map DataFrame columns to standard names
+        Map DataFrame columns to standard names (snake_case)
         
         Args:
             df: Input DataFrame
-            required_columns: List of required column names
+            required_columns: List of required column names (in snake_case)
             
         Returns:
             (mapped_df, mapping_dict)
         """
-        # Strip whitespace and create lowercase version for matching
-        df. columns = df.columns.str. strip()
+        # Strip whitespace
+        df.columns = df.columns.str.strip()
         
         mapping = {}
         
+        # First, canonicalize all required columns for comparison
+        required_canonical = {cls._canonicalize_name(col): col for col in required_columns}
+        
         for col in df.columns:
-            col_lower = col.lower(). strip()
+            # Canonicalize input column name
+            col_canonical = cls._canonicalize_name(col)
             
-            # Check if already matches a required column (case-insensitive)
-            for req_col in required_columns:
-                if col_lower == req_col.lower():
-                    if col != req_col:  # Only map if different
-                        mapping[col] = req_col
-                    break
+            # Check if canonicalized name matches a required column
+            if col_canonical in required_canonical:
+                target = required_canonical[col_canonical]
+                if col != target:  # Only map if different
+                    mapping[col] = target
             else:
-                # Check in our static mapping
+                # Check in our static mapping (for backward compatibility)
+                col_lower = col.lower().strip()
                 if col_lower in cls.COLUMN_MAPPING:
                     target = cls.COLUMN_MAPPING[col_lower]
-                    if target in required_columns:
-                        mapping[col] = target
+                    # Canonicalize target and check if it matches required
+                    target_canonical = cls._canonicalize_name(target)
+                    if target_canonical in required_canonical:
+                        mapping[col] = required_canonical[target_canonical]
         
         # Apply mapping
         df_mapped = df.rename(columns=mapping)
+        
+        # Canonicalize remaining columns that weren't mapped
+        # This ensures all columns are in snake_case format
+        canonical_mapping = {}
+        for col in df_mapped.columns:
+            canonical = cls._canonicalize_name(col)
+            if canonical != col and canonical in required_canonical:
+                canonical_mapping[col] = required_canonical[canonical]
+        
+        if canonical_mapping:
+            df_mapped = df_mapped.rename(columns=canonical_mapping)
+            mapping.update(canonical_mapping)
         
         return df_mapped, mapping
     

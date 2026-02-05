@@ -1,12 +1,12 @@
 {
-  "label_to_id": {
+  "label_map": {
     "BENIGN": 0,
     "Brute Force": 1,
     "DDoS": 2,
     "DoS": 3,
     "Port Scan": 4
   },
-  "id_to_label": {
+  "inv_label_map": {
     "0": "BENIGN",
     "1": "Brute Force",
     "2": "DDoS",

@@ -1,0 +1,7 @@
+{
+  "BENIGN": 0.7704,
+  "Brute Force": 0.9342,
+  "DDoS": 0.9453,
+  "DoS": 0.4145,
+  "Port Scan": 0.2158
+}

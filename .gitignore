@@ -1,0 +1,78 @@
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Testing & Debug outputs
+*.csv
+*.json
+!artifacts/*.json
+!per_class_thresholds.json
+
+# Debug & temporary files
+debug.py
+clean.py
+clip.py
+compare.py
+compare_feature_medians.py
+diagnose_pipeline.py
+diagnose_report.json
+prob_diagnostics.py
+stats.py
+liat_data.py
+median.py
+threshold.py
+esport.py
+kejson.py
+data_cek.py
+calibirate.py
+auto_rescale.py
+problem.py
+testcolumn.py
+testlogp.py
+test_model_load.py
+test_inference.py
+test_endpoints_comparison.py
+eval.py
+eval_multiclass.py
+
+# Local documentation (debug notes)
+FIX_*.md
+ANALISIS_*.md
+KESIMPULAN_*.md
+SOLUSI_*.md
+QUICK_FIX_*.md
+MIGRASI_*.md
+REVIEW_*.md
+SESUAIKAN_*.md
+DAFTAR_*.md
+PERBANDINGAN_*.md
+SETUP_GCP_VM.md
+
+# Deployment scripts (GCP specific)
+open_gcp_firewall.sh
+copy_artifacts.sh
+run_inference.sh
+miniconda.sh
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log

@@ -24,20 +24,20 @@ from app.schemas import (
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifecycle manager - load models on startup"""
-    print("🚀 Starting IDS Middleware...")
+    print("Starting IDS Middleware...")
     
     # Load preprocessor and model
     try:
         preprocessor.load()
         ids_model.load()
-        print("✅ All components loaded successfully!")
+        print("All components loaded successfully!")
     except Exception as e:
-        print(f"❌ Failed to load components: {e}")
+        print(f"Failed to load components: {e}")
         raise
     
     yield
     
-    print("👋 Shutting down IDS Middleware...")
+    print("Shutting down IDS Middleware...")
 
 
 # Create FastAPI app
@@ -211,8 +211,8 @@ async def predict_dataset(
         # Read file
         df = await dataset_handler.read_file(file)
         
-        print(f"📁 Uploaded file: {file.filename}")
-        print(f"   Rows: {len(df)}, Columns: {len(df. columns)}")
+        print(f"Uploaded file: {file.filename}")
+        print(f"  Rows: {len(df)}, Columns: {len(df.columns)}")
         
         # Predict
         result = dataset_handler.predict_dataset(
@@ -290,4 +290,5 @@ async def get_last_prediction_summary():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn. run(app, host="localhost", port=8000)
+    # Gunakan 0.0.0.0 untuk akses dari luar (GCP VM)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
